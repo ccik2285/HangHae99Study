@@ -5,10 +5,6 @@
 
 ## 구성원
 
-<br/>
-
-## 구성원
-
 ### 🤷‍♂️ 참여 Member
 
  <details><summary>멤버 목록</summary>
