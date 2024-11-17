@@ -47,14 +47,14 @@ public class JoinControllerTest {
 
         Member request = new Member();
         request.setUsername("ccik2285");
-        request.setPassword("Lch960529@");
+        request.setPassword("000000");
 
         mockMvc.perform(post("/api/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
 
-        verify(joinservice, times(1)).registerUser("ccik2285", "Lch960529@");
+        verify(joinservice, times(1)).registerUser("ccik2285", "000000");
     }
 
     @Test
@@ -75,7 +75,7 @@ public class JoinControllerTest {
     void testCreatedDate() {
         Member member = new Member();
         member.setUsername("testuser");
-        member.setPassword("lch960529");
+        member.setPassword("000000");
         memberRepository.save(member);
 
         // 저장 후 createdAt과 updatedAt이 자동으로 설정되어 있는지 확인
