@@ -8,6 +8,7 @@ class TddFrameworkStudyApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }
