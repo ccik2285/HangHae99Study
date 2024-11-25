@@ -35,16 +35,21 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostEntity> findAll() {
 
-        return postRepository.findAll();
+        return postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
     }
 
+    @Transactional
     @Override
     public PostEntity update(Long id, PostEntity postEntity) {
 
         PostEntity existingPost = postRepository.findById(id).orElseThrow(() -> new RuntimeException("NOT FOUND"));
 
-        existingPost.setTitle(postEntity.getTitle());
-        existingPost.setContent(postEntity.getContent());
+        if (postEntity.getTitle() != null) {
+            existingPost.setTitle(postEntity.getTitle());
+        }
+        if (postEntity.getContent() != null) {
+            existingPost.setContent(postEntity.getContent());
+        }
 
         return postRepository.save(existingPost);
     }
