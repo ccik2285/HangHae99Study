@@ -1,29 +1,20 @@
 package org.hanghae99.tddframeworkstudy.post.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
+import org.hanghae99.tddframeworkstudy.base.entity.BaseEntity;
 
-import java.time.LocalDateTime;
-
+@Getter
+@Setter
+@Table(name = "post")
 @Entity
-@Getter @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class PostEntity {
+public class PostEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
 
-    @Lob
     private String content;
-
-    @CreatedDate
-    private LocalDateTime createdAt = LocalDateTime.now();
-
 }

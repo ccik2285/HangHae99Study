@@ -2,7 +2,9 @@ package org.hanghae99.tddframeworkstudy.post.service;
 
 import org.hanghae99.tddframeworkstudy.post.entity.PostEntity;
 import org.hanghae99.tddframeworkstudy.post.repository.PostRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
