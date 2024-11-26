@@ -3,6 +3,7 @@ package org.hanghae99.tddframeworkstudy.post;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -194,6 +195,22 @@ public class PostControllerTest {
 
     }
 
+    @Test
+    @DisplayName("선택 게시글 삭제 api")
+    public void deletePost() throws Exception {
+        // given
+        when(postService.deletePost(any()));
 
+        // when
+        ResultActions perform = mockMvc.perform(delete("/1"))
+            // then
+            .andExpect(status().isOk());
+
+        // then
+        // fail test
+        ResultActions perform2 = mockMvc.perform(delete("/test"))
+            .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
+
+    }
 
 }
