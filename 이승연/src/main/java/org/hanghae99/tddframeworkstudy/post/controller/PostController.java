@@ -3,10 +3,8 @@ package org.hanghae99.tddframeworkstudy.post.controller;
 import org.hanghae99.tddframeworkstudy.base.dto.BaseResponseBody;
 import org.hanghae99.tddframeworkstudy.post.entity.PostEntity;
 import org.hanghae99.tddframeworkstudy.post.service.PostService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,19 +20,19 @@ public class PostController {
     }
 
     @PostMapping
-    public PostEntity save(@RequestBody PostEntity postEntity) {
-        return postService.save(postEntity);
+    public ResponseEntity<BaseResponseBody<PostEntity>> save(@RequestBody PostEntity postEntity) {
+
+        PostEntity savedPost =  postService.save(postEntity);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody<>(savedPost));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponseBody<PostEntity>> findById(@PathVariable Long id) {
 
-        PostEntity savedPost = postService.findById(id);
+        PostEntity post = postService.findById(id);
 
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-
-        return new ResponseEntity<>(new BaseResponseBody<>(savedPost), headers, HttpStatus.CREATED);
+        return ResponseEntity.ok(new BaseResponseBody<>(post));
     }
 
     @GetMapping
@@ -42,10 +40,7 @@ public class PostController {
 
         List<PostEntity> posts = postService.findAll();
 
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-
-        return new ResponseEntity<>(new BaseResponseBody<>(posts), headers, HttpStatus.OK);
+        return ResponseEntity.ok(new BaseResponseBody<>(posts));
     }
 
     @PutMapping("/{id}")
@@ -53,20 +48,14 @@ public class PostController {
 
         PostEntity updatedPost = postService.update(id, postEntity);
 
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-
-        return new ResponseEntity<>(new BaseResponseBody<>(updatedPost), headers, HttpStatus.OK);
+        return ResponseEntity.ok(new BaseResponseBody<>(updatedPost));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
 
         postService.delete(id);
 
-        MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Content-Type", "application/json");
-
-        return new ResponseEntity<>(new BaseResponseBody<>(), headers, HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }
