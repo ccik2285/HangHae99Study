@@ -47,13 +47,13 @@ public class PostControllerTest {
 
 
         // given
-        Post post1 = new Post();
+        PostDto post1 = new PostDto();
         post1.setTitle(TITLE1);
         post1.setAuthor(AUTHOR1);
         post1.setContents(CONTENTS1);
         post1.setCreatedAt(LOCAL_DATE_TIME1);
 
-        Post post2 = new Post();
+        PostDto post2 = new PostDto();
         post2.setTitle(TITLE2);
         post2.setAuthor(AUTHOR2);
         post2.setContents(CONTENTS2);
@@ -89,9 +89,9 @@ public class PostControllerTest {
 
 
         // then 3
-        List<Post> o = objectMapper.readValue(new String(contentAsString, "UTF-8"), new TypeReference<>() {});
+        List<PostDto> o = objectMapper.readValue(new String(contentAsString, "UTF-8"), new TypeReference<>() {});
 
-        Post post = o.get(0);
+        PostDto post = o.get(0);
         assertThat(post.getTitle()).isEqualTo(TITLE1);
         assertThat(post.getAuthor()).isEqualTo(AUTHOR1);
         assertThat(post.getContents()).isEqualTo(CONTENTS1);
@@ -109,13 +109,13 @@ public class PostControllerTest {
     @DisplayName("게시글 작성 api")
     public void writePost() throws Exception {
         // given
-        Post post1 = new Post();
+        PostDto post1 = new PostDto();
         post1.setTitle(TITLE1);
         post1.setAuthor(AUTHOR1);
         post1.setContents(CONTENTS1);
         post1.setCreatedAt(LOCAL_DATE_TIME1);
 
-        when(postService.writePost(post1)).thenReturn(post1);
+//        when(postService.writePost(post1)).thenReturn(post1);
 
 
         // when

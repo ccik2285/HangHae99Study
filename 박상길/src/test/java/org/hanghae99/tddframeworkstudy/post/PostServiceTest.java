@@ -53,13 +53,13 @@ public class PostServiceTest {
         when(postRepository.findAllByOrderByCreatedAtDesc()).thenReturn(Arrays.asList(post1, post2));
 
         // when
-        List<Post> allPosts = postService.getAllPosts();
+        List<PostDto> allPosts = postService.getAllPosts();
 
         // then
         // 결과검증
         assertThat(allPosts.size()).isEqualTo(2);
 
-        Post post = allPosts.get(0);
+        PostDto post = allPosts.get(0);
         assertThat(post.getTitle()).isEqualTo(TITLE1);
         assertThat(post.getAuthor()).isEqualTo(AUTHOR1);
         assertThat(post.getContents()).isEqualTo(CONTENTS1);
