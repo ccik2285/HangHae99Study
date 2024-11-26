@@ -50,6 +50,14 @@ public class PostService {
     }
 
     public void deletePost(Long id, PostDto postDto) {
+        Post post = postRepository.findById(id).orElseThrow(
+            () -> new EntityNotFoundException(String.format("게시글을 찾을 수 없습니다. id - %s", id))
+        );
 
+        if(!post.getPassword().equals(postDto.getPassword())) {
+            throw new IllegalArgumentException(String.format("패스워드가 일치하지 않습니다. id - %s", id));
+        }
+
+        postRepository.delete(post);
     }
 }
