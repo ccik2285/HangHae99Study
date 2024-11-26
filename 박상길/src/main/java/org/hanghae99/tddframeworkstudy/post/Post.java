@@ -25,6 +25,8 @@ public class Post extends Base {
 
     private String author;
 
+    private String password;
+
     Post(PostDto postDto){
         this.title = postDto.getTitle();
         this.contents = postDto.getContents();
@@ -32,6 +34,7 @@ public class Post extends Base {
         this.id = postDto.getId();
         this.createdAt = postDto.getCreatedAt();
         this.updatedAt = postDto.getUpdatedAt();
+        this.password = postDto.getPassword();
     }
 
 }

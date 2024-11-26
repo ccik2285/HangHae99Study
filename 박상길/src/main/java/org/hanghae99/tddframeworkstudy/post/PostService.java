@@ -31,4 +31,8 @@ public class PostService {
         );
         return new PostDto(post);
     }
+
+    public PostDto updatePost(Long id, PostDto postDto) {
+        return null;
+    }
 }

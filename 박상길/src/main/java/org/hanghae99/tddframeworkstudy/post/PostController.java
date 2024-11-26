@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,5 +47,16 @@ public class PostController {
     public PostDto selectPost(@PathVariable Long id) {
         return postService.selectPost(id);
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "게시글 수정")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "게시글 수정 성공"),
+        @ApiResponse(responseCode = "400", description = "게시글 수정 실패")
+    })
+    public PostDto selectPost(@PathVariable Long id, @RequestBody PostDto postDto) {
+        return postService.updatePost(id, postDto);
+    }
+
 
 }

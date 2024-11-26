@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -189,7 +190,7 @@ public class PostControllerTest {
         // then
         // fail test
         ResultActions perform2 = mockMvc.perform(put("/test").content(objectMapper.writeValueAsString(post1)).contentType("application/json"))
-            .andExpect(status().isNotFound());
+            .andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
 
     }
 
