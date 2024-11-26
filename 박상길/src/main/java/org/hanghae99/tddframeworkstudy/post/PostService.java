@@ -28,4 +28,7 @@ public class PostService {
         ).collect(Collectors.toList());
     }
 
+    public PostDto writePost(PostDto postDto) {
+        return null;
+    }
 }
