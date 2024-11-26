@@ -15,11 +15,13 @@ public class PostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
+    private final Long ID1 = 1L;
     private final String TITLE1 = "test1";
     private final String AUTHOR1 = "gil1";
     private final String CONTENTS1 = "작성 내용";
     private final LocalDateTime LOCAL_DATE_TIME1 = LocalDateTime.of(2024, 11, 25, 0, 0);
 
+    private final Long ID2 = 2L;
     private final String TITLE2 = "test2";
     private final String AUTHOR2 = "gil2";
     private final String CONTENTS2 = "작성 내용2";
@@ -79,5 +81,37 @@ public class PostRepositoryTest {
         assertThat(save).isNotEqualTo(post2);
 
     }
+
+    @Test
+    @DisplayName("선택 게시글 조회 data")
+    public void selectPost() throws Exception {
+        // given
+        Post post1 = new Post();
+        post1.setTitle(TITLE1);
+        post1.setAuthor(AUTHOR1);
+        post1.setContents(CONTENTS1);
+        post1.setCreatedAt(LOCAL_DATE_TIME1);
+
+        Post post2 = new Post();
+        post2.setTitle(TITLE2);
+        post2.setAuthor(AUTHOR2);
+        post2.setContents(CONTENTS2);
+        post2.setCreatedAt(LOCAL_DATE_TIME2);
+
+        postRepository.save(post1);
+        postRepository.save(post2);
+
+        // when
+        Post findPost = postRepository.findById(ID1).orElse(null);
+
+        // then
+        // 동치성 검증
+        assertThat(findPost).isEqualTo(post1);
+        assertThat(findPost).isNotEqualTo(post2);
+
+
+
+    }
+
 
 }
