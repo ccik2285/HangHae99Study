@@ -1,6 +1,7 @@
 package org.hanghae99.tddframeworkstudy.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +15,9 @@ public class PostRepositoryTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private EntityManager entityManager;
 
     private final Long ID1 = 1L;
     private final String TITLE1 = "test1";
@@ -109,7 +113,37 @@ public class PostRepositoryTest {
         assertThat(findPost).isEqualTo(post1);
         assertThat(findPost).isNotEqualTo(post2);
 
+    }
 
+
+    @Test
+    @DisplayName("선택 게시글 수정 data")
+    public void updatePost() throws Exception {
+        // given
+        Post post1 = new Post();
+        post1.setTitle(TITLE1);
+        post1.setAuthor(AUTHOR1);
+        post1.setContents(CONTENTS1);
+        post1.setCreatedAt(LOCAL_DATE_TIME1);
+
+        postRepository.save(post1);
+
+        // when
+        Post findPost = postRepository.findById(ID1).orElse(null);
+
+        findPost.setTitle(TITLE2);
+        findPost.setContents(CONTENTS2);
+
+        postRepository.save(findPost);
+
+        postRepository.flush();
+        // 초기화
+        entityManager.clear();
+
+        // then
+        assertThat(findPost.getTitle()).isEqualTo(TITLE2);
+        assertThat(findPost.getContents()).isEqualTo(CONTENTS2);
+        assertThat(findPost.getAuthor()).isEqualTo(AUTHOR1);
 
     }
 
