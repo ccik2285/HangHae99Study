@@ -2,6 +2,7 @@ package org.hanghae99.tddframeworkstudy.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -199,7 +200,7 @@ public class PostControllerTest {
     @DisplayName("선택 게시글 삭제 api")
     public void deletePost() throws Exception {
         // given
-        when(postService.deletePost(any()));
+        doNothing().when(postService).deletePost(any());
 
         // when
         ResultActions perform = mockMvc.perform(delete("/1"))
