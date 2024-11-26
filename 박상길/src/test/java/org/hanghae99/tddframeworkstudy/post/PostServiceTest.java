@@ -1,6 +1,7 @@
 package org.hanghae99.tddframeworkstudy.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -23,19 +24,20 @@ public class PostServiceTest {
     @Mock
     private PostRepository postRepository;
 
+    private final String TITLE1 = "test1";
+    private final String AUTHOR1 = "gil1";
+    private final String CONTENTS1 = "작성 내용";
+    private final LocalDateTime LOCAL_DATE_TIME1 = LocalDateTime.of(2024, 11, 25, 0, 0);
+
+    private final String TITLE2 = "test2";
+    private final String AUTHOR2 = "gil2";
+    private final String CONTENTS2 = "작성 내용2";
+    private final LocalDateTime LOCAL_DATE_TIME2 = LocalDateTime.of(2024, 11, 24, 0, 0);
+
+
     @Test
     @DisplayName("전체 게시글 목록 조회 service")
     public void selectAllPost() throws Exception {
-
-        final String TITLE1 = "test1";
-        final String AUTHOR1 = "gil1";
-        final String CONTENTS1 = "작성 내용";
-        final LocalDateTime LOCAL_DATE_TIME1 = LocalDateTime.of(2024, 11, 25, 0, 0);
-
-        final String TITLE2 = "test2";
-        final String AUTHOR2 = "gil2";
-        final String CONTENTS2 = "작성 내용2";
-        final LocalDateTime LOCAL_DATE_TIME2 = LocalDateTime.of(2024, 11, 24, 0, 0);
 
         // given
         Post post1 = new Post();
@@ -71,5 +73,37 @@ public class PostServiceTest {
         verify(postRepository, times(1)).findAllByOrderByCreatedAtDesc();
 
     }
+
+    @Test
+    @DisplayName("게시글 작성 service")
+    public void writePost() throws Exception {
+
+        // given
+        PostDto postDto = new PostDto();
+        postDto.setTitle(TITLE1);
+        postDto.setAuthor(AUTHOR1);
+        postDto.setContents(CONTENTS1);
+        postDto.setCreatedAt(LOCAL_DATE_TIME1);
+
+        Post postEntity = new Post(postDto);
+
+        when(postRepository.save(any())).thenReturn(postEntity);
+
+        // when
+        PostDto savePost = postService.writePost(postDto);
+
+        // then
+        // 결과검증
+        assertThat(savePost.getTitle()).isEqualTo(TITLE1);
+        assertThat(savePost.getAuthor()).isEqualTo(AUTHOR1);
+        assertThat(savePost.getContents()).isEqualTo(CONTENTS1);
+        assertThat(savePost.getCreatedAt()).isEqualTo(LOCAL_DATE_TIME1);
+
+        // then
+        // 행위검증
+        verify(postRepository, times(1)).save(any());
+
+    }
+
 
 }
