@@ -200,10 +200,17 @@ public class PostControllerTest {
     @DisplayName("선택 게시글 삭제 api")
     public void deletePost() throws Exception {
         // given
-        doNothing().when(postService).deletePost(any());
+        PostDto post1 = new PostDto();
+        post1.setTitle(TITLE1);
+        post1.setAuthor(AUTHOR1);
+        post1.setContents(CONTENTS1);
+        post1.setCreatedAt(LOCAL_DATE_TIME1);
+        post1.setPassword(PASSWORD1);
+
+        doNothing().when(postService).deletePost(any(), any());
 
         // when
-        ResultActions perform = mockMvc.perform(delete("/1"))
+        ResultActions perform = mockMvc.perform(delete("/1").content(objectMapper.writeValueAsString(post1)).contentType("application/json"))
             // then
             .andExpect(status().isOk());
 

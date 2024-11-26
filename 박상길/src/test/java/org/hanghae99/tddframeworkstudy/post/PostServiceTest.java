@@ -192,4 +192,44 @@ public class PostServiceTest {
 
     }
 
+    @Test
+    @DisplayName("선택 게시글 삭제 service")
+    public void deletePost() throws Exception {
+
+        // given
+        PostDto postDto = new PostDto();
+        postDto.setTitle(TITLE1);
+        postDto.setAuthor(AUTHOR1);
+        postDto.setContents(CONTENTS1);
+        postDto.setPassword(PASSWORD1);
+        postDto.setCreatedAt(LOCAL_DATE_TIME1);
+
+        PostDto postDto2 = new PostDto();
+        postDto2.setTitle(TITLE2);
+        postDto2.setAuthor(AUTHOR2);
+        postDto2.setContents(CONTENTS2);
+        postDto2.setPassword(PASSWORD2);
+        postDto2.setCreatedAt(LOCAL_DATE_TIME2);
+
+        Post postEntity = new Post(postDto);
+
+        when(postRepository.findById(ID1)).thenReturn(Optional.of(postEntity));
+        when(postRepository.findById(ID2)).thenThrow(EntityNotFoundException.class);
+
+        // when
+        postService.deletePost(ID1, postDto);
+
+        // then
+        // 행위검증
+        verify(postRepository, times(1)).findById(ID1);
+        verify(postRepository, times(1)).delete(any());
+
+        assertThatThrownBy(() -> postService.deletePost(ID2, postDto)).isInstanceOf(EntityNotFoundException.class);
+
+        // 비밀번호 불일치 테스트
+        assertThatThrownBy(() -> postService.deletePost(ID1, postDto2)).isInstanceOf(IllegalArgumentException.class);
+
+    }
+
+
 }

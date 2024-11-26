@@ -65,8 +65,8 @@ public class PostController {
         @ApiResponse(responseCode = "200", description = "게시글 삭제 성공"),
         @ApiResponse(responseCode = "400", description = "게시글 삭제 실패")
     })
-    public void deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+    public void deletePost(@PathVariable Long id, @RequestBody PostDto postDto) {
+        postService.deletePost(id, postDto);
     }
 
 }

@@ -49,7 +49,7 @@ public class PostService {
         return new PostDto(post);
     }
 
-    public void deletePost(Long id) {
+    public void deletePost(Long id, PostDto postDto) {
 
     }
 }
