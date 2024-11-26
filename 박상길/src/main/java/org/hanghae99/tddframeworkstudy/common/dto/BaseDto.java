@@ -14,10 +14,10 @@ public class BaseDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMAT)
     @DateTimeFormat(pattern = DATE_TIME_FORMAT)
-    private LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMAT)
     @DateTimeFormat(pattern = DATE_TIME_FORMAT)
-    private LocalDateTime updatedAt;
+    protected LocalDateTime updatedAt;
 
 }
