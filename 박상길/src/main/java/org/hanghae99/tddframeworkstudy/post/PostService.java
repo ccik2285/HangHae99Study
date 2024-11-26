@@ -24,4 +24,7 @@ public class PostService {
         return new PostDto(save);
     }
 
+    public PostDto selectPost(Long id) {
+        return null;
+    }
 }

@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,10 +18,10 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/posts")
-    @Operation(summary = "게시글 조회")
+    @Operation(summary = "전체 게시글 조회")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
-        @ApiResponse(responseCode = "400", description = "게시글 조회 실패")
+        @ApiResponse(responseCode = "200", description = "전체 게시글 조회 성공"),
+        @ApiResponse(responseCode = "400", description = "전체 게시글 조회 실패")
     })
     public List<PostDto> getAllPosts() {
         return postService.getAllPosts();
@@ -34,6 +35,16 @@ public class PostController {
     })
     public PostDto writePost(@RequestBody PostDto postDto) {
         return postService.writePost(postDto);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "게시글 조회")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "게시글 조회 성공"),
+        @ApiResponse(responseCode = "400", description = "게시글 조회 실패")
+    })
+    public PostDto selectPost(@PathVariable Long id) {
+        return postService.selectPost(id);
     }
 
 }
