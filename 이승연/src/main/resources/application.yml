@@ -1,0 +1,15 @@
+spring:
+  application:
+    name=: tdd-framework-study
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true # SQL 쿼리 출력
+    properties:
+      hibernate:
+        default_schema: tddframeworkstudy
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tddframeworkstudy
+    username: tddframeworkstudyuser
+    password:
+    driver-class-name: org.postgresql.Driver
