@@ -1,5 +1,6 @@
 package org.hanghae99.tddframeworkstudy.post;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,9 @@ public class PostService {
     }
 
     public PostDto selectPost(Long id) {
-        return null;
+        Post post = postRepository.findById(id).orElseThrow(
+            () -> new EntityNotFoundException(String.format("게시글을 찾을 수 없습니다. id - %s", id))
+        );
+        return new PostDto(post);
     }
 }

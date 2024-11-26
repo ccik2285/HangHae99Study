@@ -1,10 +1,12 @@
 package org.hanghae99.tddframeworkstudy.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +33,7 @@ public class PostServiceTest {
     private final String CONTENTS1 = "작성 내용";
     private final LocalDateTime LOCAL_DATE_TIME1 = LocalDateTime.of(2024, 11, 25, 0, 0);
 
+    private final Long ID2 = 2L;
     private final String TITLE2 = "test2";
     private final String AUTHOR2 = "gil2";
     private final String CONTENTS2 = "작성 내용2";
@@ -120,7 +123,8 @@ public class PostServiceTest {
 
         Post postEntity = new Post(postDto);
 
-        when(postRepository.findById(any())).thenReturn(Optional.of(postEntity));
+        when(postRepository.findById(ID1)).thenReturn(Optional.of(postEntity));
+        when(postRepository.findById(ID2)).thenThrow(EntityNotFoundException.class);
 
         // when
         PostDto findPost = postService.selectPost(ID1);
@@ -134,7 +138,8 @@ public class PostServiceTest {
 
         // then
         // 행위검증
-        verify(postRepository, times(1)).findById(any());
+        verify(postRepository, times(1)).findById(ID1);
+        assertThatThrownBy(() -> postService.selectPost(ID2)).isInstanceOf(EntityNotFoundException.class);
 
     }
 
