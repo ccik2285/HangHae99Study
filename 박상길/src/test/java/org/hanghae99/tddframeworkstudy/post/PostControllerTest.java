@@ -130,7 +130,33 @@ public class PostControllerTest {
         assertThat(post.getAuthor()).isEqualTo(AUTHOR1);
         assertThat(post.getContents()).isEqualTo(CONTENTS1);
         assertThat(post.getCreatedAt()).isEqualTo(LOCAL_DATE_TIME1);
-
     }
+
+    @Test
+    @DisplayName("선택 게시글 조회 api")
+    public void selectPost() throws Exception {
+        // given
+        PostDto post1 = new PostDto();
+        post1.setTitle(TITLE1);
+        post1.setAuthor(AUTHOR1);
+        post1.setContents(CONTENTS1);
+        post1.setCreatedAt(LOCAL_DATE_TIME1);
+
+        when(postService.selectPost(any())).thenReturn(post1);
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/1"))
+            .andExpect(status().isOk());
+
+        // then
+        byte[] contentAsString = perform.andReturn().getResponse().getContentAsByteArray();
+        PostDto post = objectMapper.readValue(new String(contentAsString, "UTF-8"), PostDto.class);
+
+        assertThat(post.getTitle()).isEqualTo(TITLE1);
+        assertThat(post.getAuthor()).isEqualTo(AUTHOR1);
+        assertThat(post.getContents()).isEqualTo(CONTENTS1);
+        assertThat(post.getCreatedAt()).isEqualTo(LOCAL_DATE_TIME1);
+    }
+
 
 }
