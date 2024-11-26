@@ -31,6 +31,7 @@ public class PostServiceTest {
     private final String TITLE1 = "test1";
     private final String AUTHOR1 = "gil1";
     private final String CONTENTS1 = "작성 내용";
+    private final String PASSWORD1 = "123";
     private final LocalDateTime LOCAL_DATE_TIME1 = LocalDateTime.of(2024, 11, 25, 0, 0);
 
     private final Long ID2 = 2L;
@@ -143,6 +144,39 @@ public class PostServiceTest {
 
     }
 
+    @Test
+    @DisplayName("선택 게시글 수정 service")
+    public void updatePost() throws Exception {
 
+        // given
+        PostDto postDto = new PostDto();
+        postDto.setTitle(TITLE1);
+        postDto.setAuthor(AUTHOR1);
+        postDto.setContents(CONTENTS1);
+        postDto.setPassword(PASSWORD1);
+        postDto.setCreatedAt(LOCAL_DATE_TIME1);
+
+        Post postEntity = new Post(postDto);
+
+        when(postRepository.findById(ID1)).thenReturn(Optional.of(postEntity));
+
+        // when
+        PostDto updatePost = postService.updatePost(ID1, postDto);
+
+        // then
+        // 결과검증
+        assertThat(updatePost.getTitle()).isEqualTo(TITLE1);
+        assertThat(updatePost.getAuthor()).isEqualTo(AUTHOR1);
+        assertThat(updatePost.getContents()).isEqualTo(CONTENTS1);
+        assertThat(updatePost.getCreatedAt()).isEqualTo(LOCAL_DATE_TIME1);
+
+        // then
+        // 행위검증
+        verify(postRepository, times(1)).findById(ID1);
+        verify(postRepository, times(1)).save(any());
+
+        assertThatThrownBy(() -> postService.selectPost(ID2)).isInstanceOf(EntityNotFoundException.class);
+
+    }
 
 }
