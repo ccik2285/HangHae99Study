@@ -1,6 +1,7 @@
 package org.hanghae99.tddframeworkstudy.post;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -115,16 +116,15 @@ public class PostControllerTest {
         post1.setContents(CONTENTS1);
         post1.setCreatedAt(LOCAL_DATE_TIME1);
 
-//        when(postService.writePost(post1)).thenReturn(post1);
-
+        when(postService.writePost(any())).thenReturn(post1);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/write").content(objectMapper.writeValueAsString(post1)))
+        ResultActions perform = mockMvc.perform(post("/write").content(objectMapper.writeValueAsString(post1)).contentType("application/json"))
             .andExpect(status().isOk());
 
         // then
         byte[] contentAsString = perform.andReturn().getResponse().getContentAsByteArray();
-        Post post = objectMapper.readValue(new String(contentAsString, "UTF-8"), Post.class);
+        PostDto post = objectMapper.readValue(new String(contentAsString, "UTF-8"), PostDto.class);
 
         assertThat(post.getTitle()).isEqualTo(TITLE1);
         assertThat(post.getAuthor()).isEqualTo(AUTHOR1);
