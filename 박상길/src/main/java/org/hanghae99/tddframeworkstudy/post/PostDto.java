@@ -1,11 +1,13 @@
 package org.hanghae99.tddframeworkstudy.post;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hanghae99.tddframeworkstudy.common.dto.BaseDto;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class PostDto extends BaseDto {
 
     private Long id;
@@ -15,6 +17,15 @@ public class PostDto extends BaseDto {
     private String contents;
 
     private String author;
+
+    PostDto(Post post) {
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.contents = post.getContents();
+        this.author = post.getAuthor();
+        this.createdAt = post.getCreatedAt();
+        this.updatedAt = post.getUpdatedAt();
+    }
 
 }
 
