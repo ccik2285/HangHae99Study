@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +25,7 @@ public class PostServiceTest {
     @Mock
     private PostRepository postRepository;
 
+    private final Long ID1 = 1L;
     private final String TITLE1 = "test1";
     private final String AUTHOR1 = "gil1";
     private final String CONTENTS1 = "작성 내용";
@@ -104,6 +106,38 @@ public class PostServiceTest {
         verify(postRepository, times(1)).save(any());
 
     }
+
+    @Test
+    @DisplayName("선택 게시글 조회 service")
+    public void selectPost() throws Exception {
+
+        // given
+        PostDto postDto = new PostDto();
+        postDto.setTitle(TITLE1);
+        postDto.setAuthor(AUTHOR1);
+        postDto.setContents(CONTENTS1);
+        postDto.setCreatedAt(LOCAL_DATE_TIME1);
+
+        Post postEntity = new Post(postDto);
+
+        when(postRepository.findById(any())).thenReturn(Optional.of(postEntity));
+
+        // when
+        PostDto findPost = postService.selectPost(ID1);
+
+        // then
+        // 결과검증
+        assertThat(findPost.getTitle()).isEqualTo(TITLE1);
+        assertThat(findPost.getAuthor()).isEqualTo(AUTHOR1);
+        assertThat(findPost.getContents()).isEqualTo(CONTENTS1);
+        assertThat(findPost.getCreatedAt()).isEqualTo(LOCAL_DATE_TIME1);
+
+        // then
+        // 행위검증
+        verify(postRepository, times(1)).findById(any());
+
+    }
+
 
 
 }
