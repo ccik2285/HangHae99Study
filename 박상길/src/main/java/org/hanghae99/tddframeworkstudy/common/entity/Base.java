@@ -2,6 +2,7 @@ package org.hanghae99.tddframeworkstudy.common.entity;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PostRemove;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,5 +21,10 @@ public class Base {
 
     @LastModifiedDate
     protected LocalDateTime updatedAt;
+
+    @PostRemove
+    protected void postRemove() {
+        System.out.println("postRemove");
+    }
 
 }

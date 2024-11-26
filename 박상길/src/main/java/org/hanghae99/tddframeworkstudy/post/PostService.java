@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class PostService {
         return postList.stream().map(PostDto::new).collect(Collectors.toList());
     }
 
+    @Transactional
     public PostDto writePost(PostDto postDto) {
         Post post = new Post(postDto);
         Post save = postRepository.save(post);
@@ -32,6 +34,7 @@ public class PostService {
         return new PostDto(post);
     }
 
+    @Transactional
     public PostDto updatePost(Long id, PostDto postDto) {
         Post post = postRepository.findById(id).orElseThrow(
             () -> new EntityNotFoundException(String.format("게시글을 찾을 수 없습니다. id - %s", id))
@@ -49,6 +52,7 @@ public class PostService {
         return new PostDto(post);
     }
 
+    @Transactional
     public void deletePost(Long id, PostDto postDto) {
         Post post = postRepository.findById(id).orElseThrow(
             () -> new EntityNotFoundException(String.format("게시글을 찾을 수 없습니다. id - %s", id))
