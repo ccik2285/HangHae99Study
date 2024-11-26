@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -35,6 +36,7 @@ public class PostControllerTest {
     private final String TITLE1 = "test1";
     private final String AUTHOR1 = "gil1";
     private final String CONTENTS1 = "작성 내용";
+    private final String PASSWORD1 = "123";
     private final LocalDateTime LOCAL_DATE_TIME1 = LocalDateTime.of(2024, 11, 25, 0, 0);
 
     private final String TITLE2 = "test2";
@@ -157,6 +159,40 @@ public class PostControllerTest {
         assertThat(post.getContents()).isEqualTo(CONTENTS1);
         assertThat(post.getCreatedAt()).isEqualTo(LOCAL_DATE_TIME1);
     }
+
+    @Test
+    @DisplayName("선택 게시글 수정 api")
+    public void updatePost() throws Exception {
+        // given
+        PostDto post1 = new PostDto();
+        post1.setTitle(TITLE1);
+        post1.setAuthor(AUTHOR1);
+        post1.setContents(CONTENTS1);
+        post1.setCreatedAt(LOCAL_DATE_TIME1);
+        post1.setPassword(PASSWORD1);
+
+        when(postService.updatePost(any(), any())).thenReturn(post1);
+
+        // when
+        ResultActions perform = mockMvc.perform(put("/1").content(objectMapper.writeValueAsString(post1)).contentType("application/json"))
+            .andExpect(status().isOk());
+
+        // then
+        byte[] contentAsString = perform.andReturn().getResponse().getContentAsByteArray();
+        PostDto post = objectMapper.readValue(new String(contentAsString, "UTF-8"), PostDto.class);
+
+        assertThat(post.getTitle()).isEqualTo(TITLE1);
+        assertThat(post.getAuthor()).isEqualTo(AUTHOR1);
+        assertThat(post.getContents()).isEqualTo(CONTENTS1);
+        assertThat(post.getCreatedAt()).isEqualTo(LOCAL_DATE_TIME1);
+
+        // then
+        // fail test
+        ResultActions perform2 = mockMvc.perform(put("/test").content(objectMapper.writeValueAsString(post1)).contentType("application/json"))
+            .andExpect(status().isNotFound());
+
+    }
+
 
 
 }
