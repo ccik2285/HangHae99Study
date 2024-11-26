@@ -15,20 +15,13 @@ public class PostService {
 
         List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
 
-        return postList.stream().map(
-            post -> {
-                PostDto postDto = new PostDto();
-                postDto.setId(post.getId());
-                postDto.setTitle(post.getTitle());
-                postDto.setAuthor(post.getAuthor());
-                postDto.setContents(post.getContents());
-                postDto.setCreatedAt(post.getCreatedAt());
-                return postDto;
-            }
-        ).collect(Collectors.toList());
+        return postList.stream().map(PostDto::new).collect(Collectors.toList());
     }
 
     public PostDto writePost(PostDto postDto) {
-        return null;
+        Post post = new Post(postDto);
+        Post save = postRepository.save(post);
+        return new PostDto(save);
     }
+
 }
