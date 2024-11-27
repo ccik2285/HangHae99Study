@@ -7,7 +7,7 @@ import org.hanghae99.tddframeworkstudy.base.entity.BaseEntity;
 
 @Getter
 @Setter
-@Table(name = "post")
+@Table(name = "ss_post")
 @Entity
 public class PostEntity extends BaseEntity {
     @Id
