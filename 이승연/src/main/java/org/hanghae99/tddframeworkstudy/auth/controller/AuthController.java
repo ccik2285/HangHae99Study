@@ -1,6 +1,7 @@
 package org.hanghae99.tddframeworkstudy.auth.controller;
 
 import org.hanghae99.tddframeworkstudy.auth.dto.LoginReq;
+import org.hanghae99.tddframeworkstudy.auth.dto.LoginRes;
 import org.hanghae99.tddframeworkstudy.auth.service.AuthService;
 import org.hanghae99.tddframeworkstudy.base.dto.BaseResponseBody;
 import org.hanghae99.tddframeworkstudy.user.entity.UserEntity;
@@ -25,5 +26,12 @@ public class AuthController {
         UserEntity userEntity = authService.signup(loginReq);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody<>(userEntity));
+    }
+
+    // 로그인
+    @PostMapping("/login")
+    public ResponseEntity<BaseResponseBody<LoginRes>> login(@RequestBody LoginReq loginReq) {
+
+        return ResponseEntity.ok(new BaseResponseBody<>(authService.login(loginReq)));
     }
 }

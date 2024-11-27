@@ -1,5 +1,6 @@
 package org.hanghae99.tddframeworkstudy.user.service;
 
+import java.util.Optional;
 import org.hanghae99.tddframeworkstudy.user.entity.UserEntity;
 import org.hanghae99.tddframeworkstudy.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,11 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
-    // 중복된 사용자 이름이 있는지 확인
+    // 사용자 이름으로 사용자 조회
     @Override
-    public boolean isDuplicateUsername(String username) {
+    public Optional<UserEntity> findByUsername(String username) {
 
-        return userRepository.findByUsername(username).isPresent();
+        return userRepository.findByUsername(username);
     }
 
     // 사용자 저장
