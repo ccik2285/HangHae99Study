@@ -17,6 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
@@ -41,6 +43,7 @@ public class PostServiceTest {
     private final String PASSWORD2 = "345";
     private final LocalDateTime LOCAL_DATE_TIME2 = LocalDateTime.of(2024, 11, 24, 0, 0);
 
+    private final Sort sort = Sort.by(Direction.DESC, "createdAt");
 
     @Test
     @DisplayName("전체 게시글 목록 조회 service")
@@ -59,7 +62,8 @@ public class PostServiceTest {
         post2.setContents(CONTENTS2);
         post2.setCreatedAt(LOCAL_DATE_TIME2);
 
-        when(postRepository.findAllByOrderByCreatedAtDesc()).thenReturn(Arrays.asList(post1, post2));
+
+        when(postRepository.findAll(sort)).thenReturn(Arrays.asList(post1, post2));
 
         // when
         List<PostDto> allPosts = postService.getAllPosts();
@@ -77,7 +81,7 @@ public class PostServiceTest {
 
         // then
         // 행위검증
-        verify(postRepository, times(1)).findAllByOrderByCreatedAtDesc();
+        verify(postRepository, times(1)).findAll(sort);
 
     }
 

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 @DataJpaTest
 public class PostRepositoryTest {
@@ -27,6 +29,7 @@ public class PostRepositoryTest {
     private final String CONTENTS2 = "작성 내용2";
     private final LocalDateTime LOCAL_DATE_TIME2 = LocalDateTime.of(2024, 11, 24, 0, 0);
 
+    private final Sort sort = Sort.by(Direction.DESC, "createdAt");
 
     @Test
     @DisplayName("전체 게시글 목록 조회 API")
@@ -47,7 +50,7 @@ public class PostRepositoryTest {
         postRepository.saveAll(Arrays.asList(post1, post2));
 
         // when
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
+        List<Post> posts = postRepository.findAll(sort);
 
         // then
         assertThat(posts.size()).isEqualTo(2);
@@ -102,7 +105,7 @@ public class PostRepositoryTest {
         postRepository.save(post2);
 
         // when
-        Post findPost = postRepository.findById(ID1).orElse(null);
+        Post findPost = postRepository.findById(post1.getId()).orElse(null);
 
         // then
         // 동치성 검증
@@ -125,7 +128,7 @@ public class PostRepositoryTest {
         postRepository.save(post1);
 
         // when
-        Post findPost = postRepository.findById(ID1).orElse(null);
+        Post findPost = postRepository.findById(post1.getId()).orElse(null);
 
         findPost.setTitle(TITLE2);
         findPost.setContents(CONTENTS2);
@@ -154,7 +157,7 @@ public class PostRepositoryTest {
         postRepository.flush();
 
         // when
-        Post findPost = postRepository.findById(ID1).orElse(null);
+        Post findPost = postRepository.findById(post1.getId()).orElse(null);
 
         // then
         assertThat(findPost.getTitle()).isEqualTo(TITLE1);
