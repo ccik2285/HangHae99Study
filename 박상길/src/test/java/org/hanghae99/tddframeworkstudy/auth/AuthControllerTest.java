@@ -45,12 +45,12 @@ public class AuthControllerTest {
         final String URL = "/signUp";
 
         // given
-        UserDto user1 = new User();
+        UserDto user1 = new UserDto();
         user1.setName(USER_NAME);
         user1.setPassword(USER_PASSWORD);
 
         // succ
-        when(postService.findByName(any())).thenReturn(user1);
+        when(authService.signUp(any())).thenReturn(user1);
 
         // when
         ResultActions perform = mockMvc.perform(post(URL)
