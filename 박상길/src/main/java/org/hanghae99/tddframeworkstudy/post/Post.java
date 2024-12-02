@@ -4,15 +4,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hanghae99.tddframeworkstudy.common.entity.Base;
 
 @Entity
 @Getter
 @Setter
-public class Post {
+@NoArgsConstructor
+public class Post extends Base {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +25,17 @@ public class Post {
 
     private String author;
 
-    private LocalDateTime createdAt;
+    private String password;
+
+    Post(PostDto postDto){
+        this.title = postDto.getTitle();
+        this.contents = postDto.getContents();
+        this.author = postDto.getAuthor();
+        this.id = postDto.getId();
+        this.createdAt = postDto.getCreatedAt();
+        this.updatedAt = postDto.getUpdatedAt();
+        this.password = postDto.getPassword();
+    }
 
 }
 
