@@ -1,14 +1,12 @@
 package org.hanghae99.tddframeworkstudy.auth;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hanghae99.tddframeworkstudy.user.UserDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -49,9 +47,6 @@ public class AuthControllerTest {
         user1.setName(USER_NAME);
         user1.setPassword(USER_PASSWORD);
 
-        // succ
-        when(authService.signUp(any())).thenReturn(user1);
-
         // when
         ResultActions perform = mockMvc.perform(post(URL)
                 .content(objectMapper.writeValueAsString(user1)).contentType(MediaType.APPLICATION_JSON))
@@ -61,7 +56,7 @@ public class AuthControllerTest {
         // fail test
         ResultActions perform2 = mockMvc.perform(post(URL))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.status").value("fail"));
+            .andExpect(jsonPath("$.status").value("error"));
 
     }
 
