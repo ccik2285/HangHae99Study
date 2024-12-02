@@ -23,7 +23,7 @@ public class User extends Base {
 
     private String password;
 
-    User(UserDto userDto){
+    public User(UserDto userDto){
         this.id = userDto.getId();
         this.name = userDto.getName();
         this.password = userDto.getPassword();

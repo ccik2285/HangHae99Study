@@ -23,8 +23,8 @@ public class AuthController {
         @ApiResponse(responseCode = "200", description = "회원가입 성공"),
         @ApiResponse(responseCode = "400", description = "회원가입 실패")
     })
-    public ResponseEntity<ApiRes<?>> signUp(@RequestBody UserDto userDto) {
-        return authService.signUp(userDto);
+    public ResponseEntity<ApiRes<UserDto>> signUp(@RequestBody UserDto userDto) {
+        return ApiRes.success("", authService.signUp(userDto));
     }
 
 }
