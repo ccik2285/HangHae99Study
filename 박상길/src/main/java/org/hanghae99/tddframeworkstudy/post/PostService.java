@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,7 @@ public class PostService {
 
     public List<PostDto> getAllPosts(){
 
-        List<Post> postList = postRepository.findAllByOrderByCreatedAtDesc();
+        List<Post> postList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
 
         return postList.stream().map(PostDto::new).collect(Collectors.toList());
     }
