@@ -45,7 +45,7 @@ public class AuthControllerTest {
         final String URL = "/signUp";
 
         // given
-        User user1 = new User();
+        UserDto user1 = new User();
         user1.setName(USER_NAME);
         user1.setPassword(USER_PASSWORD);
 
