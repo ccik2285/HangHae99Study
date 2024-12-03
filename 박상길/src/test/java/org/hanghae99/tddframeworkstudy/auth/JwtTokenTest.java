@@ -1,9 +1,10 @@
 package org.hanghae99.tddframeworkstudy.auth;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.assertj.core.api.Assertions;
+import javax.crypto.SecretKey;
+import org.hanghae99.tddframeworkstudy.common.security.JwtTokenProvider;
 import org.hanghae99.tddframeworkstudy.user.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,21 +30,19 @@ public class JwtTokenTest {
         user.setName(USER_NAME);
         user.setPassword(USER_PASSWORD);
 
-        String key = jwtTokenProvider.getKey();
+        SecretKey secretKey = jwtTokenProvider.getSECRET_KEY();
 
         // when
-        String jwtToken = jwtTokenProvider.generateJwt(user.getName());
+        String jwtToken = jwtTokenProvider.generateToken(user.getName());
 
         // then
         assertThat(jwtToken).isNotBlank();
 
-
         // given
-        Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(jwtToken).getBody();
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken).getBody();
 
         // then
         assertThat(claims.getSubject()).isEqualTo(USER_NAME);
-
     }
 
 }
