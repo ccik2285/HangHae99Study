@@ -1,6 +1,7 @@
 package org.hanghae99.tddframeworkstudy.auth;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,6 +51,7 @@ public class AuthControllerTest {
         // when
         ResultActions perform = mockMvc.perform(post(URL)
                 .content(objectMapper.writeValueAsString(user1)).contentType(MediaType.APPLICATION_JSON))
+            // then
             .andExpect(status().isOk());
 
         // then
@@ -59,5 +61,45 @@ public class AuthControllerTest {
             .andExpect(jsonPath("$.status").value("error"));
 
     }
+
+    /**
+     * 1. username, password를 Client에서 전달받기
+     * 2.  로그인 성공 시, 로그인에 성공한 유저의 정보와 JWT를 활용하여 토큰을 발급하고,
+     *      발급한 토큰을 Header에 추가하고 성공했다는 메시지, 상태코드 와 함께 Client에 반환하기
+     * @throws Exception
+     */
+    @Test
+    @DisplayName("로그인 api")
+    public void signIn() throws Exception {
+        final String URL = "/signIn";
+
+        // given
+        UserDto user1 = new UserDto();
+        user1.setName(USER_NAME);
+        user1.setPassword(USER_PASSWORD);
+
+
+        // when - 1
+        ResultActions perform = mockMvc.perform(post(URL)
+                .content(objectMapper.writeValueAsString(user1)).contentType(MediaType.APPLICATION_JSON))
+            // then - 1
+            .andExpect(status().isOk());
+
+        // then - 1
+        // fail test
+        ResultActions perform2 = mockMvc.perform(post(URL))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value("error"));
+
+
+        // when - 2
+        ResultActions perform3 = mockMvc.perform(post(URL)
+                .content(objectMapper.writeValueAsString(user1)).contentType(MediaType.APPLICATION_JSON))
+            // then - 2
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value("success"))
+            .andExpect(header().string("token", "Bearer " + "test"));
+    }
+
 
 }
