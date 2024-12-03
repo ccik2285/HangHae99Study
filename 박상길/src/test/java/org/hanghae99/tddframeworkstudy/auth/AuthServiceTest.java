@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import org.hanghae99.tddframeworkstudy.user.User;
 import org.hanghae99.tddframeworkstudy.user.UserDto;
@@ -33,6 +34,9 @@ public class AuthServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private HttpServletResponse response;
 
     private final String USER_NAME = "test";
     private final String USER_PASSWORD = "test1234";
@@ -73,6 +77,40 @@ public class AuthServiceTest {
 
         assertThat(userDto.getName()).isEqualTo(USER_NAME);
         assertThatThrownBy(() -> authService.signUp(userDto2)).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    /**
+     * DB에서 username을 사용하여 저장된 회원의 유무를 확인하고 있다면 password 비교하기
+    */
+    @Test
+    @DisplayName("로그인 service")
+    public void signIn() {
+        // given
+        UserDto userDto1 = new UserDto();
+        userDto1.setName(USER_NAME);
+        userDto1.setPassword(USER_PASSWORD);
+
+        UserDto userDto2 = new UserDto();
+        userDto2.setName(USER_NAME2);
+        userDto2.setPassword(USER_PASSWORD);
+
+        // 로그인 할 유저
+        User user1 = new User(userDto1);
+        User user2 = new User(userDto2);
+
+        // invalid 유저
+        UserDto userDto3 = new UserDto();
+        userDto3.setName(USER_NAME);
+        userDto3.setPassword("invalidPassword");
+
+        // stub
+        when(userRepository.findByName(user1.getName())).thenReturn(Optional.of(user1));
+        when(userRepository.findByName(user2.getName())).thenReturn(Optional.empty());
+
+
+        // when then
+        assertThat(authService.signIn(userDto1, response)).isEqualTo(USER_NAME);
+        assertThatThrownBy(() -> authService.signIn(userDto3, response)).isInstanceOf(IllegalArgumentException.class);
     }
 
 }
