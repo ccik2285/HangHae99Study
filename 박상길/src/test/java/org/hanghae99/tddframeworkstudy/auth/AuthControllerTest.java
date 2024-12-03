@@ -1,5 +1,7 @@
 package org.hanghae99.tddframeworkstudy.auth;
 
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -78,6 +80,9 @@ public class AuthControllerTest {
         user1.setName(USER_NAME);
         user1.setPassword(USER_PASSWORD);
 
+        // return 동작이 아닌 response header에 값을 넣어줘야 하기때문에 필요함
+        when(authService.signIn(any(), any())).thenCallRealMethod();
+
 
         // when - 1
         ResultActions perform = mockMvc.perform(post(URL)
@@ -98,7 +103,7 @@ public class AuthControllerTest {
             // then - 2
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value("success"))
-            .andExpect(header().string("token", "Bearer " + "test"));
+            .andExpect(header().string("Authorization", "Bearer " + "test"));
     }
 
 

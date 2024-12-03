@@ -1,5 +1,6 @@
 package org.hanghae99.tddframeworkstudy.auth;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.hanghae99.tddframeworkstudy.user.User;
@@ -38,5 +39,10 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
 
         return new UserDto(userRepository.save(user));
+    }
+
+    public UserDto signIn(UserDto userDto, HttpServletResponse response) {
+        response.setHeader("Authorization", "Bearer " + "test");
+        return null;
     }
 }
