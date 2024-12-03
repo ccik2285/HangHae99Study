@@ -6,8 +6,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import org.hanghae99.tddframeworkstudy.common.security.JwtTokenProvider;
 import org.hanghae99.tddframeworkstudy.user.User;
 import org.hanghae99.tddframeworkstudy.user.UserDto;
 import org.hanghae99.tddframeworkstudy.user.UserRepository;
@@ -17,7 +19,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,11 +36,14 @@ public class AuthServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
+    @Spy
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Mock
     private HttpServletResponse response;
+
+    @Mock
+    private JwtTokenProvider jwtTokenProvider;
 
     private final String USER_NAME = "test";
     private final String USER_PASSWORD = "test1234";
@@ -96,6 +103,9 @@ public class AuthServiceTest {
 
         // 로그인 할 유저
         User user1 = new User(userDto1);
+        user1.setPassword(passwordEncoder.encode(userDto1.getPassword()));
+
+
         User user2 = new User(userDto2);
 
         // invalid 유저
@@ -109,7 +119,10 @@ public class AuthServiceTest {
 
 
         // when then
-        assertThat(authService.signIn(userDto1, response)).isEqualTo(USER_NAME);
+        assertThat(authService.signIn(userDto1, response).getName()).isEqualTo(USER_NAME);
+        assertThatThrownBy(() -> authService.signIn(userDto2, response)).isInstanceOf(EntityNotFoundException.class);
+
+        // 비밀번호 불일치
         assertThatThrownBy(() -> authService.signIn(userDto3, response)).isInstanceOf(IllegalArgumentException.class);
     }
 
