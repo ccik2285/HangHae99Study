@@ -19,6 +19,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardResponse boardResponse;
 
     @GetMapping
     @Operation(summary = "모든 게시글 조회 API", description = "모든 게시글 조회")
@@ -37,7 +38,7 @@ public class BoardController {
             @ApiResponse(responseCode = "400", description = "게시글 작성 실패")
     })
     public Board createBoard(@Valid @RequestBody BoardResponse request) {
-        return boardService.createBoard(boardService.convertToBoardEntity(request));
+        return boardService.createBoard(boardResponse.convertToBoardEntity(request));
     }
 
     @GetMapping("/{id}")
