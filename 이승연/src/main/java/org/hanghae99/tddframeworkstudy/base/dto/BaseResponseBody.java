@@ -6,15 +6,15 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter @Setter
-public class BaseResponseBody<T> {
+public class BaseResponseBody {
     private LocalDateTime timestamp;
-    private T content;
+    private Object content;
 
     public BaseResponseBody() {
         this.timestamp = LocalDateTime.now();
     }
 
-    public BaseResponseBody(T content) {
+    public BaseResponseBody(Object content) {
         this.timestamp = LocalDateTime.now();
         this.content = content;
     }

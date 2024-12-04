@@ -20,35 +20,35 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponseBody<PostEntity>> save(@RequestBody PostEntity postEntity) {
+    public ResponseEntity<BaseResponseBody> save(@RequestBody PostEntity postEntity) {
 
         PostEntity savedPost =  postService.save(postEntity);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody<>(savedPost));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody(savedPost));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BaseResponseBody<PostEntity>> findById(@PathVariable Long id) {
+    public ResponseEntity<BaseResponseBody> findById(@PathVariable Long id) {
 
         PostEntity post = postService.findById(id);
 
-        return ResponseEntity.ok(new BaseResponseBody<>(post));
+        return ResponseEntity.ok(new BaseResponseBody(post));
     }
 
     @GetMapping
-    public ResponseEntity<BaseResponseBody<List<PostEntity>>> findAll() {
+    public ResponseEntity<BaseResponseBody> findAll() {
 
         List<PostEntity> posts = postService.findAll();
 
-        return ResponseEntity.ok(new BaseResponseBody<>(posts));
+        return ResponseEntity.ok(new BaseResponseBody(posts));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponseBody<PostEntity>> update(@PathVariable Long id, @RequestBody PostEntity postEntity) {
+    public ResponseEntity<BaseResponseBody> update(@PathVariable Long id, @RequestBody PostEntity postEntity) {
 
         PostEntity updatedPost = postService.update(id, postEntity);
 
-        return ResponseEntity.ok(new BaseResponseBody<>(updatedPost));
+        return ResponseEntity.ok(new BaseResponseBody(updatedPost));
     }
 
     @DeleteMapping("/{id}")

@@ -21,17 +21,19 @@ public class AuthController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<BaseResponseBody<UserEntity>> signup(@RequestBody LoginReq loginReq) {
+    public ResponseEntity<BaseResponseBody> signup(@RequestBody LoginReq loginReq) {
 
         UserEntity userEntity = authService.signup(loginReq);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody<>(userEntity));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody(userEntity));
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<BaseResponseBody<LoginRes>> login(@RequestBody LoginReq loginReq) {
+    public ResponseEntity<BaseResponseBody> login(@RequestBody LoginReq loginReq) {
 
-        return ResponseEntity.ok(new BaseResponseBody<>(authService.login(loginReq)));
+        LoginRes loginRes = authService.login(loginReq);
+
+        return ResponseEntity.ok(new BaseResponseBody(loginRes));
     }
 }
