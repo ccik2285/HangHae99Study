@@ -1,5 +1,9 @@
 package org.hanghae99.tddframeworkstudy.post.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
+import org.hanghae99.tddframeworkstudy.post.dto.PostReq;
+import org.hanghae99.tddframeworkstudy.post.dto.PostRes;
 import org.hanghae99.tddframeworkstudy.post.entity.PostEntity;
 import org.hanghae99.tddframeworkstudy.post.repository.PostRepository;
 import org.springframework.data.domain.Sort;
@@ -9,55 +13,66 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Service
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final ObjectMapper objectMapper;
 
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, ObjectMapper objectMapper) {
         this.postRepository = postRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
-    public PostEntity save(PostEntity postEntity) {
+    public PostRes save(PostReq PostReq) {
 
-        return postRepository.save(postEntity);
+        PostEntity postEntity = PostReq.toEntity();
+        PostEntity newPost = postRepository.save(postEntity);
+
+        return objectMapper.convertValue(newPost, PostRes.class);
     }
 
     @Override
-    public PostEntity findById(Long id) {
+    public PostRes findById(Long id) {
 
-        Optional<PostEntity> newPost = postRepository.findById(id);
+        Optional<PostEntity> optionalPostEntity = postRepository.findById(id);
+        PostEntity postEntity = optionalPostEntity.orElseThrow(() -> new EntityNotFoundException(id.toString()));
 
-        return newPost.orElseThrow(() -> new RuntimeException("NOT FOUND"));
+        return objectMapper.convertValue(postEntity, PostRes.class);
     }
 
     @Override
-    public List<PostEntity> findAll() {
+    public List<PostRes> findAll() {
 
-        return postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+        List<PostEntity> postEntityList = postRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        return postEntityList.stream().map(postEntity -> objectMapper.convertValue(postEntity, PostRes.class)).toList();
     }
 
     @Transactional
     @Override
-    public PostEntity update(Long id, PostEntity postEntity) {
+    public PostRes update(Long id, PostReq postReq) {
 
-        PostEntity existingPost = postRepository.findById(id).orElseThrow(() -> new RuntimeException("NOT FOUND"));
+        PostEntity existingPost = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id.toString()));
 
-        if (postEntity.getTitle() != null) {
-            existingPost.setTitle(postEntity.getTitle());
+        if (postReq.getTitle() != null) {
+            existingPost.setTitle(postReq.getTitle());
         }
-        if (postEntity.getContent() != null) {
-            existingPost.setContent(postEntity.getContent());
+        if (postReq.getContent() != null) {
+            existingPost.setContent(postReq.getContent());
         }
 
-        return postRepository.save(existingPost);
+        PostEntity updatedPost = postRepository.save(existingPost);
+
+        return objectMapper.convertValue(updatedPost, PostRes.class);
     }
 
     @Override
     public void delete(Long id) {
 
-        PostEntity existingPost = postRepository.findById(id).orElseThrow(() -> new RuntimeException("NOT FOUND"));
+        PostEntity existingPost = postRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id.toString()));
 
         postRepository.delete(existingPost);
     }

@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class) // @CreatedDate, @LastModifiedDate 사용하기 위해 리스너 추가
 public class BaseEntity {
 
-    Boolean isDelete = false;
-
     @CreatedDate
     private LocalDateTime createdAt;
 
