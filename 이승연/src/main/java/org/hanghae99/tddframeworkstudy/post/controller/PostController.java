@@ -1,7 +1,8 @@
 package org.hanghae99.tddframeworkstudy.post.controller;
 
 import org.hanghae99.tddframeworkstudy.base.dto.BaseResponseBody;
-import org.hanghae99.tddframeworkstudy.post.entity.PostEntity;
+import org.hanghae99.tddframeworkstudy.post.dto.PostReq;
+import org.hanghae99.tddframeworkstudy.post.dto.PostRes;
 import org.hanghae99.tddframeworkstudy.post.service.PostService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,9 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponseBody> save(@RequestBody PostEntity postEntity) {
+    public ResponseEntity<BaseResponseBody> save(@RequestBody PostReq postReq) {
 
-        PostEntity savedPost =  postService.save(postEntity);
+        PostRes savedPost =  postService.save(postReq);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseBody(savedPost));
     }
@@ -30,7 +31,7 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponseBody> findById(@PathVariable Long id) {
 
-        PostEntity post = postService.findById(id);
+        PostRes post = postService.findById(id);
 
         return ResponseEntity.ok(new BaseResponseBody(post));
     }
@@ -38,21 +39,21 @@ public class PostController {
     @GetMapping
     public ResponseEntity<BaseResponseBody> findAll() {
 
-        List<PostEntity> posts = postService.findAll();
+        List<PostRes> posts = postService.findAll();
 
         return ResponseEntity.ok(new BaseResponseBody(posts));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponseBody> update(@PathVariable Long id, @RequestBody PostEntity postEntity) {
+    public ResponseEntity<BaseResponseBody> update(@PathVariable Long id, @RequestBody PostReq postReq) {
 
-        PostEntity updatedPost = postService.update(id, postEntity);
+        PostRes updatedPost = postService.update(id, postReq);
 
         return ResponseEntity.ok(new BaseResponseBody(updatedPost));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<BaseResponseBody> delete(@PathVariable Long id) {
 
         postService.delete(id);
 
