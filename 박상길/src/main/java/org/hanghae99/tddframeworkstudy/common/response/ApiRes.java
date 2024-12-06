@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 @Getter
 @Setter
 @Builder
-public class ApiResponse<T> {
+public class ApiRes<T> {
 
     /**
      * status
@@ -24,8 +24,8 @@ public class ApiResponse<T> {
     private LocalDateTime timestamp;
 
 
-    public static <T> ResponseEntity<ApiResponse<T>> success(String message, T data) {
-        ApiResponse<T> response = ApiResponse.<T>builder()
+    public static <T> ResponseEntity<ApiRes<T>> success(String message, T data) {
+        ApiRes<T> response = org.hanghae99.tddframeworkstudy.common.response.ApiRes.<T>builder()
             .status(STATUS_SUCCESS)
             .message(message)
             .data(data)
@@ -34,8 +34,8 @@ public class ApiResponse<T> {
         return ResponseEntity.ok(response);
     }
 
-    public static <T> ResponseEntity<ApiResponse<T>> fail(String message, T data) {
-        ApiResponse<T> response = ApiResponse.<T>builder()
+    public static <T> ResponseEntity<ApiRes<T>> fail(String message, T data) {
+        ApiRes<T> response = org.hanghae99.tddframeworkstudy.common.response.ApiRes.<T>builder()
             .status(STATUS_FAIL)
             .message(message)
             .data(data)
@@ -44,8 +44,8 @@ public class ApiResponse<T> {
         return ResponseEntity.ok(response);
     }
 
-    public static ResponseEntity<ApiResponse> error(String message) {
-        ApiResponse response = ApiResponse.builder()
+    public static ResponseEntity<ApiRes> error(String message) {
+        ApiRes response = org.hanghae99.tddframeworkstudy.common.response.ApiRes.builder()
             .status(STATUS_ERROR)
             .message(message)
             .data(null)

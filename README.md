@@ -34,6 +34,8 @@
 
 ### 기술 스택
 
+---
+
 - java 21
 - spring boot 3.3.5
 - jpa
