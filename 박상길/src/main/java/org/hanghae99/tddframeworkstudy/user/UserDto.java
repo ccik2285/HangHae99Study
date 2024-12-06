@@ -17,12 +17,15 @@ public class UserDto extends BaseDto {
 
     private String password;
 
+    private UserRole role;
+
     public UserDto(User user){
         this.id = user.getId();
         this.name = user.getName();
         this.password = user.getPassword();
         this.createdAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();
+        this.role = user.getRole();
     }
 
     public boolean validName(){

@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import org.hanghae99.tddframeworkstudy.common.security.JwtTokenProvider;
+import org.hanghae99.tddframeworkstudy.user.UserRole;
 import org.hanghae99.tddframeworkstudy.user.User;
 import org.hanghae99.tddframeworkstudy.user.UserDto;
 import org.hanghae99.tddframeworkstudy.user.UserRepository;
@@ -141,12 +142,12 @@ public class AuthServiceTest {
         UserDto userDto1 = new UserDto();
         userDto1.setName(USER_NAME);
         userDto1.setPassword(VALID_USER_PASSWORD);
-        userDto1.setRole(USER_ROLE.ADMIN);
+        userDto1.setRole(UserRole.ADMIN);
 
         UserDto userDto2 = new UserDto();
         userDto2.setName(USER_NAME2);
         userDto2.setPassword(VALID_USER_PASSWORD);
-        userDto2.setRole(USER_ROLE.USER);
+        userDto2.setRole(UserRole.USER);
 
         User user1 = new User(userDto1);
         User user2 = new User(userDto2);
@@ -154,16 +155,24 @@ public class AuthServiceTest {
         // stub
         when(userRepository.findByName(userDto1.getName())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(user1);
+
+        // when
+        UserDto tc_userDto = authService.signUp(userDto1);
+
+        // then
+        assertThat(tc_userDto.getRole()).isEqualTo(UserRole.ADMIN);
+
+
+        // stub
         when(userRepository.findByName(userDto2.getName())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(user2);
 
         // when
-        UserDto tc_userDto = authService.signUp(userDto1);
         UserDto tc_userDto2 = authService.signUp(userDto2);
 
         // then
-        assertThat(tc_userDto.getRole()).isEqualTo(USER_ROLE.ADMIN);
-        assertThat(tc_userDto2.getRole()).isEqualTo(USER_ROLE.USER);
+        assertThat(tc_userDto2.getRole()).isEqualTo(UserRole.USER);
+
 
     }
 
