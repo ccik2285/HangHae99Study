@@ -46,44 +46,82 @@ public class AuthServiceTest {
     private JwtTokenProvider jwtTokenProvider;
 
     private final String USER_NAME = "test";
-    private final String USER_PASSWORD = "test1234";
-
     private final String USER_NAME2 = "test2";
+    private final String USER_NAME3 = "test3";
+
+    private final String LEGACY_USER_PASSWORD = "test1234";
+    private final String VALID_USER_PASSWORD = "test123!A";
 
     /**
      * username은 최소 4자 이상, 10자 이하이며 알파벳 소문자(a~z), 숫자(0~9)로 구성
      * password는 최소 8자 이상, 15자 이하이며 알파벳 대소문자(a~z, A~Z), 숫자(0~9)로 구성
+     *
+     * 수정 내용 issue #20
+     *  - password는 최소 8자 이상, 15자 이하이며 알파벳 대소문자(az, AZ), 숫자(0~9), 특수문자로 구성되어야 한다.
+     *  - 회원 권한 부여하기 (ADMIN, USER) - ADMIN 회원은 모든 게시글, 댓글 수정 / 삭제 가능
      * @throws Exception
      */
     @Test
     @DisplayName("회원가입 service")
     public void signUp(){
         // given
+        // test case1 올바르지 않은 비밀번호 형식
         UserDto userDto1 = new UserDto();
         userDto1.setName(USER_NAME);
-        userDto1.setPassword(USER_PASSWORD);
+        userDto1.setPassword(LEGACY_USER_PASSWORD);
 
+        // test case2 이미 존재하는 유저
         UserDto userDto2 = new UserDto();
         userDto2.setName(USER_NAME2);
-        userDto2.setPassword(USER_PASSWORD);
+        userDto2.setPassword(LEGACY_USER_PASSWORD);
+
+        // test case3 올바른 비밀번호 형식
+        UserDto userDto3 = new UserDto();
+        userDto3.setName(USER_NAME3);
+        userDto3.setPassword(VALID_USER_PASSWORD);
 
         User user1 = new User(userDto1);
         User user2 = new User(userDto2);
+        User user3 = new User(userDto3);
 
+        // stub
         when(userRepository.findByName(user1.getName())).thenReturn(Optional.empty());
-        when(userRepository.save(any())).thenReturn(user1);
-
         when(userRepository.findByName(user2.getName())).thenReturn(Optional.of(user1));
+        when(userRepository.findByName(user3.getName())).thenReturn(Optional.empty());
+        when(userRepository.save(any())).thenReturn(user3);
+
+
+        /**
+         * test case 1
+         */
+
+        // when then
+        assertThatThrownBy(() -> authService.signUp(userDto1)).isInstanceOf(IllegalArgumentException.class);
+        verify(userRepository, times(1)).findByName(userDto1.getName());
+
+        /**
+         * test case 2
+         */
+
+        // when then
+        assertThatThrownBy(() -> authService.signUp(userDto2)).isInstanceOf(IllegalArgumentException.class);
+        verify(userRepository, times(1)).findByName(userDto2.getName());
+
+        /**
+         * test case 3
+         */
 
         // when
-        UserDto userDto = authService.signUp(userDto1);
+        UserDto tc_userDto = authService.signUp(userDto3);
 
         // then
-        verify(userRepository, times(1)).findByName(user1.getName());
-        verify(passwordEncoder, times(1)).encode(user1.getPassword());
+        verify(userRepository, times(1)).findByName(userDto3.getName());
+        verify(passwordEncoder, times(1)).encode(userDto2.getPassword());
+        verify(userRepository, times(1)).save(user3);
 
-        assertThat(userDto.getName()).isEqualTo(USER_NAME);
-        assertThatThrownBy(() -> authService.signUp(userDto2)).isInstanceOf(IllegalArgumentException.class);
+        assertThat(tc_userDto.getName()).isEqualTo(USER_NAME3);
+
+
     }
 
     /**
@@ -95,11 +133,11 @@ public class AuthServiceTest {
         // given
         UserDto userDto1 = new UserDto();
         userDto1.setName(USER_NAME);
-        userDto1.setPassword(USER_PASSWORD);
+        userDto1.setPassword(LEGACY_USER_PASSWORD);
 
         UserDto userDto2 = new UserDto();
         userDto2.setName(USER_NAME2);
-        userDto2.setPassword(USER_PASSWORD);
+        userDto2.setPassword(LEGACY_USER_PASSWORD);
 
         // 로그인 할 유저
         User user1 = new User(userDto1);
