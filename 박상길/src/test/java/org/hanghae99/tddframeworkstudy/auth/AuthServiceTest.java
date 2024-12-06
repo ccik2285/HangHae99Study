@@ -60,10 +60,14 @@ public class AuthServiceTest {
      *  - password는 최소 8자 이상, 15자 이하이며 알파벳 대소문자(az, AZ), 숫자(0~9), 특수문자로 구성되어야 한다.
      *  - 회원 권한 부여하기 (ADMIN, USER) - ADMIN 회원은 모든 게시글, 댓글 수정 / 삭제 가능
      * @throws Exception
+     *
+     * ## 테스트 내용
+     * - password 검증
+     * - 회원 존재유무 검증
      */
     @Test
-    @DisplayName("회원가입 service")
-    public void signUp(){
+    @DisplayName("회원가입 service1")
+    public void signUp1(){
         // given
         // test case1 올바르지 않은 비밀번호 형식
         UserDto userDto1 = new UserDto();
@@ -121,6 +125,45 @@ public class AuthServiceTest {
 
         assertThat(tc_userDto.getName()).isEqualTo(USER_NAME3);
 
+
+    }
+
+    /**
+     * 회원 권한 부여하기 (ADMIN, USER) - ADMIN 회원은 모든 게시글, 댓글 수정 / 삭제 가능
+     *
+     * ## 테스트 내용
+     * - 회원 ROLE 검증 (ADMIN, USER)
+     */
+    @Test
+    @DisplayName("회원가입 service2")
+    public void signUp2(){
+        // given
+        UserDto userDto1 = new UserDto();
+        userDto1.setName(USER_NAME);
+        userDto1.setPassword(VALID_USER_PASSWORD);
+        userDto1.setRole(USER_ROLE.ADMIN);
+
+        UserDto userDto2 = new UserDto();
+        userDto2.setName(USER_NAME2);
+        userDto2.setPassword(VALID_USER_PASSWORD);
+        userDto2.setRole(USER_ROLE.USER);
+
+        User user1 = new User(userDto1);
+        User user2 = new User(userDto2);
+
+        // stub
+        when(userRepository.findByName(userDto1.getName())).thenReturn(Optional.empty());
+        when(userRepository.save(any())).thenReturn(user1);
+        when(userRepository.findByName(userDto2.getName())).thenReturn(Optional.empty());
+        when(userRepository.save(any())).thenReturn(user2);
+
+        // when
+        UserDto tc_userDto = authService.signUp(userDto1);
+        UserDto tc_userDto2 = authService.signUp(userDto2);
+
+        // then
+        assertThat(tc_userDto.getRole()).isEqualTo(USER_ROLE.ADMIN);
+        assertThat(tc_userDto2.getRole()).isEqualTo(USER_ROLE.USER);
 
     }
 
