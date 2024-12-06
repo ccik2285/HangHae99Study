@@ -31,7 +31,7 @@ public class UserDto extends BaseDto {
     }
 
     public boolean validPassword(){
-        String regex = "^[a-zA-Z0-9]{8,15}$";
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,15}$";
         return Pattern.matches(regex, this.password);
     }
 

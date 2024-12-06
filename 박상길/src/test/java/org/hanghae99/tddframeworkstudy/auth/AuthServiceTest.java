@@ -86,7 +86,7 @@ public class AuthServiceTest {
 
         // stub
         when(userRepository.findByName(user1.getName())).thenReturn(Optional.empty());
-        when(userRepository.findByName(user2.getName())).thenReturn(Optional.of(user1));
+        when(userRepository.findByName(user2.getName())).thenReturn(Optional.of(user2));
         when(userRepository.findByName(user3.getName())).thenReturn(Optional.empty());
         when(userRepository.save(any())).thenReturn(user3);
 
@@ -116,8 +116,8 @@ public class AuthServiceTest {
 
         // then
         verify(userRepository, times(1)).findByName(userDto3.getName());
-        verify(passwordEncoder, times(1)).encode(userDto2.getPassword());
-        verify(userRepository, times(1)).save(user3);
+        verify(passwordEncoder, times(1)).encode(userDto3.getPassword());
+        verify(userRepository, times(1)).save(any());
 
         assertThat(tc_userDto.getName()).isEqualTo(USER_NAME3);
 
