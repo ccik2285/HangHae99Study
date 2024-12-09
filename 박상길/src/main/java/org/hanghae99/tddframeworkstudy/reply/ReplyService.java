@@ -38,7 +38,7 @@ public class ReplyService {
         Reply reply = replyRepository.findById(replyDto.getId()).orElseThrow(EntityNotFoundException::new);
 
         if(userId != reply.getUser().getId()){
-            throw new JwtException("올바르지 않은 토큰정보");
+            throw new JwtException("작성자만 삭제/수정할 수 있습니다.");
         }
 
         reply.setContents(replyDto.getContents());

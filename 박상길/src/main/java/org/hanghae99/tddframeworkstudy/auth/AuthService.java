@@ -27,7 +27,7 @@ public class AuthService {
     public UserDto signUp(UserDto userDto){
         Optional<User> findUser = userRepository.findByName(userDto.getName());
         if(findUser.isPresent()){
-            throw new IllegalArgumentException("중복 name");
+            throw new IllegalArgumentException("중복된 username 입니다.");
         }
 
         if (!userDto.validName()){
@@ -48,13 +48,13 @@ public class AuthService {
     public UserDto signIn(UserDto userDto, HttpServletResponse response) {
         Optional<User> findUser = userRepository.findByName(userDto.getName());
         if(!findUser.isPresent()){
-            throw new EntityNotFoundException("회원정보가 존재하지 않습니다.");
+            throw new EntityNotFoundException("회원을 찾을 수 없습니다.");
         }
 
         User user = findUser.get();
 
         if(!passwordEncoder.matches(userDto.getPassword(), user.getPassword())){
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException("회원을 찾을 수 없습니다.");
         }
 
         String token = jwtTokenProvider.generateToken(user.getName(), user.getId());
