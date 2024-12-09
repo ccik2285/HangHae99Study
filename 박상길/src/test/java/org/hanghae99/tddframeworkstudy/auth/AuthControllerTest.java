@@ -7,9 +7,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.Optional;
+import org.hanghae99.tddframeworkstudy.user.User;
 import org.hanghae99.tddframeworkstudy.user.UserDto;
+import org.hanghae99.tddframeworkstudy.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 @WebMvcTest(AuthController.class)
+@ExtendWith(MockitoExtension.class)
 public class AuthControllerTest {
 
     @Autowired
@@ -29,7 +39,7 @@ public class AuthControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
+    private static final Long USER_ID = 1L;
     private final String USER_NAME = "test";
     private final String USER_PASSWORD = "test";
 
@@ -77,12 +87,9 @@ public class AuthControllerTest {
 
         // given
         UserDto user1 = new UserDto();
+        user1.setId(USER_ID);
         user1.setName(USER_NAME);
         user1.setPassword(USER_PASSWORD);
-
-        // return 동작이 아닌 response header에 값을 넣어줘야 하기때문에 필요함
-        when(authService.signIn(any(), any())).thenCallRealMethod();
-
 
         // when - 1
         ResultActions perform = mockMvc.perform(post(URL)
@@ -98,6 +105,14 @@ public class AuthControllerTest {
 
 
         // when - 2
+        // return 동작이 아닌 response header에 값을 넣어줘야 하기때문에 필요함
+        // then 동작을 통해 강제로 token 주입 한 뒤 userDto를 반환
+        when(authService.signIn(any(), any())).then(invocationOnMock -> {
+            HttpServletResponse argument = invocationOnMock.getArgument(1);
+            argument.setHeader("Authorization", "Bearer " + "test");
+            return user1;
+        });
+
         ResultActions perform3 = mockMvc.perform(post(URL)
                 .content(objectMapper.writeValueAsString(user1)).contentType(MediaType.APPLICATION_JSON))
             // then - 2

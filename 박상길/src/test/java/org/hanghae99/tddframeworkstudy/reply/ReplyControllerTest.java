@@ -50,6 +50,13 @@ public class ReplyControllerTest {
         String url = "/reply/write";
 
         // given
+        UserDto userDto = new UserDto();
+        userDto.setId(USER_ID);
+        userDto.setName(USER_NAME);
+
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+        String token = jwtTokenProvider.generateToken(userDto.getName(), userDto.getId());
+
         ReplyDto replyDto = new ReplyDto();
         replyDto.setContents(REPLY_CONTENTS);
 
@@ -63,7 +70,9 @@ public class ReplyControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value("error"));
 
-        ResultActions resultActions2 = mockMvc.perform(post(url).content(objectMapper.writeValueAsString(reply)).contentType(MediaType.APPLICATION_JSON))
+        ResultActions resultActions2 = mockMvc.perform(post(url)
+                .header("Authorization", "Bearer " + token)
+                .content(objectMapper.writeValueAsString(reply)).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         Map<String, Object> readValue = objectMapper.readValue(new String(resultActions2.andReturn().getResponse().getContentAsByteArray(), StandardCharsets.UTF_8), Map.class);

@@ -40,7 +40,7 @@ public class JwtTokenProvider {
             userDto.setId(Long.parseLong(id));
             userDto.setName(subject);
         } catch(Exception e) {
-            throw new JwtException("Invalid token");
+            throw new JwtException("토큰이 유효하지 않습니다.");
         }
         return userDto;
     }
@@ -50,7 +50,7 @@ public class JwtTokenProvider {
         try {
             token = request.getHeader("Authorization").substring(7);
         } catch (Exception e) {
-            token = "";
+            throw new JwtException("토큰이 유효하지 않습니다.");
         }
         return token;
     }
