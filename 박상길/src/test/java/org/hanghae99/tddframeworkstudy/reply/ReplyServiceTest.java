@@ -43,6 +43,7 @@ public class ReplyServiceTest {
     private final Long REPLY_ID2 = 2L;
     private final String REPLY_CONTENTS = "test";
     private final String TEST_USER_NAME = "test";
+    private final Long TEST_USER_ID = 1L;
 
     // post
     private final Long POST_ID1 = 1L;
@@ -60,10 +61,11 @@ public class ReplyServiceTest {
     public void write(){
         // given
         User user = new User();
+        user.setId(TEST_USER_ID);
         user.setName(TEST_USER_NAME);
         user.setRole(UserRole.ADMIN);
 
-        String validToken = jwtTokenProvider.generateToken(user.getName());
+        String validToken = jwtTokenProvider.generateToken(user.getName(), user.getId());
         String invalidToken = "invalidToken";
 
         // post1

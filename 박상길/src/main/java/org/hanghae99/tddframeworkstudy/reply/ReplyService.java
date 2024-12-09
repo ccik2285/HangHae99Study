@@ -28,4 +28,7 @@ public class ReplyService {
         return new ReplyDto(save);
     }
 
+    public ReplyDto update(ReplyDto replyDto, String token) {
+        return null;
+    }
 }

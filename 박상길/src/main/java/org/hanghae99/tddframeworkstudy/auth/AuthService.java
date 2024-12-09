@@ -57,7 +57,7 @@ public class AuthService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        String token = jwtTokenProvider.generateToken(user.getName());
+        String token = jwtTokenProvider.generateToken(user.getName(), user.getId());
 
         response.setHeader("Authorization", "Bearer " + token);
 

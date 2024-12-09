@@ -81,7 +81,7 @@ public class ReplyControllerTest {
     @Test
     @DisplayName("댓글수정 api controller")
     public void updateReply() throws Exception {
-        String url = "/1";
+        String url = "/reply/1";
 
         // given
         UserDto userDto = new UserDto();
@@ -95,13 +95,14 @@ public class ReplyControllerTest {
         JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
         String token = jwtTokenProvider.generateToken(userDto.getName(), userDto.getId());
 
-        when(replyService.update(replyDto)).thenReturn(reply);
+        when(replyService.update(any(), any())).thenReturn(replyDto);
 
         // when then
         mockMvc.perform(put(url)
                 .header("Authorization", "Bearer " + token)
             .content(objectMapper.writeValueAsString(replyDto)).contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value("success"));
 
         // then
         mockMvc.perform(put(url))

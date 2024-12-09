@@ -20,7 +20,7 @@ public class ReplyDto extends BaseDto {
     public ReplyDto(Reply reply){
         this.id = reply.getId();
         this.contents = reply.getContents();
-        this.postDto = new PostDto(reply.getPost());
+        this.postDto = reply.getPost() != null ? new PostDto(reply.getPost()) : null;
     }
 
 }

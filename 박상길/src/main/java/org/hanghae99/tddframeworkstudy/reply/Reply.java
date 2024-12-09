@@ -30,7 +30,7 @@ public class Reply extends Base {
     public Reply(ReplyDto replyDto){
         this.id = replyDto.getId();
         this.contents = replyDto.getContents();
-        this.post = new Post(replyDto.getPostDto());
+        this.post = replyDto.getPostDto() != null ? new Post(replyDto.getPostDto()) : null;
     }
 
 }

@@ -18,9 +18,10 @@ public class JwtTokenProvider {
     private final long EXPIRATION_TIME = 3600000; // 1시간
 
     // JWT 토큰 생성
-    public String generateToken(String username) {
+    public String generateToken(String username, Long id) {
         return Jwts.builder()
             .setSubject(username)
+            .setId(id.toString())
             .setIssuedAt(new Date()) // 토큰 발행 시간
             .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // 토큰 만료 시간
             .signWith(SECRET_KEY) // 비밀키로 서명
