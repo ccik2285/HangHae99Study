@@ -1,6 +1,6 @@
 package org.hanghae99.tddframeworkstudy.reply;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
-import org.assertj.core.api.Assertions;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +41,8 @@ public class ReplyControllerTest {
     @Test
     @DisplayName("댓글작성 api controller")
     public void writeReply() throws Exception {
+        String url = "/reply/write";
+
         // given
         ReplyDto replyDto = new ReplyDto();
         replyDto.setContents(REPLY_CONTENTS);
@@ -48,19 +50,21 @@ public class ReplyControllerTest {
         Reply reply = new Reply(replyDto);
 
         // when
-        when(replyService.writeReply(any())).thenReturn(reply);
+        when(replyService.write(any())).thenReturn(replyDto);
 
         // then
-        ResultActions resultActions = mockMvc.perform(post("write"))
+        ResultActions resultActions = mockMvc.perform(post(url))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value("error"));
 
-        ResultActions resultActions2 = mockMvc.perform(post("write").content(objectMapper.writeValueAsString(reply)).contentType(MediaType.APPLICATION_JSON))
+        ResultActions resultActions2 = mockMvc.perform(post(url).content(objectMapper.writeValueAsString(reply)).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
 
-        String contents = new String(resultActions.andReturn().getResponse().getContentAsByteArray(), StandardCharsets.UTF_8);
-        assertThat(contents).isEqualTo(REPLY_CONTENTS);
+        Map<String, Object> readValue = objectMapper.readValue(new String(resultActions2.andReturn().getResponse().getContentAsByteArray(), StandardCharsets.UTF_8), Map.class);
+        ReplyDto returnVal = objectMapper.readValue(objectMapper.writeValueAsString(readValue.get("data")), ReplyDto.class);
+
+        assertThat(returnVal.getContents()).isEqualTo(REPLY_CONTENTS);
     }
 
 }
