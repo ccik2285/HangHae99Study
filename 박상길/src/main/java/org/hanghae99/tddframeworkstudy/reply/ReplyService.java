@@ -1,10 +1,12 @@
 package org.hanghae99.tddframeworkstudy.reply;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hanghae99.tddframeworkstudy.common.security.JwtTokenProvider;
 import org.hanghae99.tddframeworkstudy.post.PostRepository;
+import org.hanghae99.tddframeworkstudy.user.UserDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,6 +31,20 @@ public class ReplyService {
     }
 
     public ReplyDto update(ReplyDto replyDto, String token) {
-        return null;
+        UserDto userDto = jwtTokenProvider.validToken(token);
+
+        Long userId = userDto.getId();
+
+        Reply reply = replyRepository.findById(replyDto.getId()).orElseThrow(EntityNotFoundException::new);
+
+        if(userId != reply.getUser().getId()){
+            throw new JwtException("올바르지 않은 토큰정보");
+        }
+
+        reply.setContents(replyDto.getContents());
+
+        Reply save = replyRepository.save(reply);
+
+        return new ReplyDto(save);
     }
 }

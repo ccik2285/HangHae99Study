@@ -1,5 +1,6 @@
 package org.hanghae99.tddframeworkstudy.common.security;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.Getter;
+import org.hanghae99.tddframeworkstudy.user.UserDto;
 import org.springframework.stereotype.Component;
 
 @Getter
@@ -28,11 +30,19 @@ public class JwtTokenProvider {
             .compact();
     }
 
-    public String validToken(String token) {
-        if("invalidToken".equals(token)){
+    public UserDto validToken(String token) {
+        UserDto userDto = null;
+        try{
+            Claims body = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+            String id = body.getId();
+            String subject = body.getSubject();
+            userDto = new UserDto();
+            userDto.setId(Long.parseLong(id));
+            userDto.setName(subject);
+        } catch(Exception e) {
             throw new JwtException("Invalid token");
         }
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+        return userDto;
     }
 
     public static String extractToken(HttpServletRequest request) {
