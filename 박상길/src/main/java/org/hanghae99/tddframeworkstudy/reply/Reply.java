@@ -4,10 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hanghae99.tddframeworkstudy.common.entity.Base;
+import org.hanghae99.tddframeworkstudy.post.Post;
 
 
 @Entity
@@ -22,9 +24,13 @@ public class Reply extends Base {
 
     private String contents;
 
-    Reply(ReplyDto replyDto){
+    @ManyToOne
+    private Post post;
+
+    public Reply(ReplyDto replyDto){
         this.id = replyDto.getId();
         this.contents = replyDto.getContents();
+        this.post = new Post(replyDto.getPostDto());
     }
 
 }

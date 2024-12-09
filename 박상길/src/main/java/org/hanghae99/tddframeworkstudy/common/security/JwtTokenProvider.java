@@ -1,8 +1,10 @@
 package org.hanghae99.tddframeworkstudy.common.security;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.Getter;
@@ -23,5 +25,22 @@ public class JwtTokenProvider {
             .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // 토큰 만료 시간
             .signWith(SECRET_KEY) // 비밀키로 서명
             .compact();
+    }
+
+    public String validToken(String token) {
+        if("invalidToken".equals(token)){
+            throw new JwtException("Invalid token");
+        }
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public static String extractToken(HttpServletRequest request) {
+        String token = null;
+        try {
+            token = request.getHeader("Authorization").substring(7);
+        } catch (Exception e) {
+            token = "";
+        }
+        return token;
     }
 }

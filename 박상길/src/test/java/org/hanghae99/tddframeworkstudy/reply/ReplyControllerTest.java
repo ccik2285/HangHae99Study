@@ -50,7 +50,7 @@ public class ReplyControllerTest {
         Reply reply = new Reply(replyDto);
 
         // when
-        when(replyService.write(any())).thenReturn(replyDto);
+        when(replyService.write(any(), any())).thenReturn(replyDto);
 
         // then
         ResultActions resultActions = mockMvc.perform(post(url))
@@ -59,7 +59,6 @@ public class ReplyControllerTest {
 
         ResultActions resultActions2 = mockMvc.perform(post(url).content(objectMapper.writeValueAsString(reply)).contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
-
 
         Map<String, Object> readValue = objectMapper.readValue(new String(resultActions2.andReturn().getResponse().getContentAsByteArray(), StandardCharsets.UTF_8), Map.class);
         ReplyDto returnVal = objectMapper.readValue(objectMapper.writeValueAsString(readValue.get("data")), ReplyDto.class);
