@@ -1,12 +1,14 @@
 package org.hanghae99.tddframeworkstudy.comment.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.hanghae99.tddframeworkstudy.comment.dto.CommentReq;
 import org.hanghae99.tddframeworkstudy.comment.dto.CommentRes;
 import org.hanghae99.tddframeworkstudy.comment.entity.CommentEntity;
 import org.hanghae99.tddframeworkstudy.comment.repository.CommentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -24,14 +26,26 @@ public class CommentServiceImpl implements CommentService {
         return objectMapper.convertValue(newComment, CommentRes.class);
     }
 
+    @Transactional
     @Override
     public CommentRes update(Long id, CommentReq commentReq) {
-        // TODO CommentController 테스트 진행중
-        return null;
+
+        CommentEntity existingComment = commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id.toString()));
+
+        if (commentReq.getContent() != null) {
+            existingComment.setContent(commentReq.getContent());
+        }
+
+        CommentEntity updatedComment = commentRepository.save(existingComment);
+
+        return objectMapper.convertValue(updatedComment, CommentRes.class);
     }
 
     @Override
     public void delete(Long id) {
-        // TODO CommentController 테스트 진행중
+
+        CommentEntity existingComment = commentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(id.toString()));
+
+        commentRepository.delete(existingComment);
     }
 }
