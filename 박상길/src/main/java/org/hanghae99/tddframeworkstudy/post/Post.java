@@ -27,7 +27,7 @@ public class Post extends Base {
 
     private String password;
 
-    Post(PostDto postDto){
+    public Post(PostDto postDto){
         this.title = postDto.getTitle();
         this.contents = postDto.getContents();
         this.author = postDto.getAuthor();

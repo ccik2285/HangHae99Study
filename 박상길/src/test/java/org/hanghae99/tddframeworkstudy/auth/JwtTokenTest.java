@@ -18,6 +18,7 @@ public class JwtTokenTest {
     @InjectMocks
     private JwtTokenProvider jwtTokenProvider;
 
+    private final Long USER_ID = 1L;
     private final String USER_NAME = "test1234";
     private final String USER_PASSWORD = "test";
 
@@ -27,13 +28,14 @@ public class JwtTokenTest {
 
         // given
         User user = new User();
+        user.setId(USER_ID);
         user.setName(USER_NAME);
         user.setPassword(USER_PASSWORD);
 
         SecretKey secretKey = jwtTokenProvider.getSECRET_KEY();
 
         // when
-        String jwtToken = jwtTokenProvider.generateToken(user.getName());
+        String jwtToken = jwtTokenProvider.generateToken(user.getName(), user.getId());
 
         // then
         assertThat(jwtToken).isNotBlank();

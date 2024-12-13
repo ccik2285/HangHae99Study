@@ -22,7 +22,7 @@ public class PostDto extends BaseDto {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    PostDto(Post post) {
+    public PostDto(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.contents = post.getContents();

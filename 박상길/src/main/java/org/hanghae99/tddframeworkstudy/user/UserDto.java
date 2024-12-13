@@ -17,12 +17,15 @@ public class UserDto extends BaseDto {
 
     private String password;
 
+    private UserRole role;
+
     public UserDto(User user){
         this.id = user.getId();
         this.name = user.getName();
         this.password = user.getPassword();
         this.createdAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();
+        this.role = user.getRole();
     }
 
     public boolean validName(){
@@ -31,7 +34,7 @@ public class UserDto extends BaseDto {
     }
 
     public boolean validPassword(){
-        String regex = "^[a-zA-Z0-9]{8,15}$";
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,15}$";
         return Pattern.matches(regex, this.password);
     }
 
