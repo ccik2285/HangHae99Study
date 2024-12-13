@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hanghae99.tddframeworkstudy.base.entity.BaseEntity;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "ss_post")
 @Entity
 public class PostEntity extends BaseEntity {

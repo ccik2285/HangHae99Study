@@ -1,5 +1,6 @@
 package org.hanghae99.tddframeworkstudy.post.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.hanghae99.tddframeworkstudy.base.dto.BaseResponseBody;
 import org.hanghae99.tddframeworkstudy.post.dto.PostReq;
 import org.hanghae99.tddframeworkstudy.post.dto.PostRes;
@@ -10,15 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/post")
 public class PostController {
 
     private final PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
 
     @PostMapping
     public ResponseEntity<BaseResponseBody> save(@RequestBody PostReq postReq) {
